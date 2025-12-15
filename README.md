@@ -46,20 +46,9 @@ ContactHub is a web-based application for managing contacts in a smart and organ
 
 ---
 
-## **📂 Project Structure**
+## **📂 Live Demo**
 
-ContactHub/
-├── css/
-│ ├── bootstrap.min.css
-│ ├── style.css
-│ └── all.main.css
-├── images/
-│ ├── title.png
-│ └── nav.png
-├── js/
-│ ├── index.js
-│ └── bootstrap.bundle.min.js
-└── index.html
+https://gigi4321.github.io/CRUD-System/
 
 ---
 
