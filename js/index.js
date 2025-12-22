@@ -10,9 +10,9 @@ var favouriteInput = document.getElementById("favourite");
 var emergencyInput = document.getElementById("emergency");
 
 //status section varaibles
-var total = document.getElementById("total_count");
-var favorite = document.getElementById("favourite_count");
-var emergency = document.getElementById("emergency_count");
+var total = 0;
+var favoriteCount = 0;
+var emergencyCount = 0;
 
 //search variables
 var searchInput = document.getElementById("search");
@@ -25,17 +25,17 @@ var currentIndex = null;
 
 // todo______: start of functions _______//
 
-
-
 // load cards from localStorage
-window.onload = function() {
-    var storedCards = localStorage.getItem("cards");
-    if (storedCards) {
-        cards = JSON.parse(storedCards);
-        display(); // عرض الكروت بعد تحميلها
-    }
+window.onload = function () {
+  var storedCards = localStorage.getItem("cards");
+  if (storedCards) {
+    cards = JSON.parse(storedCards);
+    display(); // display cards after loading
+    displayFav();
+    displayEmergency();
+    updateCounters();
+  }
 };
-
 
 //add product that will show after click on add contact
 function addProduct() {
@@ -77,8 +77,11 @@ function addProduct() {
       showConfirmButton: false,
     });
   }
-   localStorage.setItem("cards", JSON.stringify(cards));
+  localStorage.setItem("cards", JSON.stringify(cards));
   display();
+  updateCounters();
+  displayFav();
+  displayEmergency();
   clear_inputs();
 }
 
@@ -90,8 +93,8 @@ function clear_inputs() {
   addressInput.value = null;
   groupInput.value = null;
   noticeInput.value = null;
-  favouriteInput.value = null;
-  emergencyInput.value = null;
+  favouriteInput.checked = null;
+  emergencyInput.checked = null;
 }
 //display all object in (array_of_object [cards] =>that have all data for every card ) to show the cards that user added
 function display() {
@@ -119,15 +122,25 @@ function display() {
                                         <div
                                             class="img-holder position-relative rounded-3 bg-primary  text-white bg-gradient fs-6" id="icons-active">
                                             <span class="fw-bold">EO</span>
-                                            <div id="favourite_icon">
+                                            <div id="favourite_icon" class="${
+                                              cards[i].favourite
+                                                ? "d-flex"
+                                                : "d-none"
+                                            }">
                                                 <i class="fa-solid fa-star"></i>
                                             </div>
-                                            <div id="emergency_icon">
+                                            <div id="emergency_icon"  class="${
+                                              cards[i].emergency
+                                                ? "d-flex"
+                                                : "d-none"
+                                            }">
                                                 <i class="fa-solid fa-heart-pulse"></i>
                                             </div>
                                         </div>
                                         <div class="text ">
-                                            <h3 class="h6 fw-bold">${cards[i].user_name}</h3>
+                                            <h3 class="h6 fw-bold">${
+                                              cards[i].user_name
+                                            }</h3>
                                             <div class="phone d-flex align-items-center gap-2" id="phone_card">
                                                 <div class="icon-holder bg-info-subtle fs-12 text-info rounded-2">
                                                     <i class="fa-solid fa-phone"></i>
@@ -156,8 +169,16 @@ function display() {
                                             </div>
                                         </div>
                                         <div class="spans d-flex gap-2">
-                                            <span id="user_group_badge" class="badge text-bg-primary bg-opacity-25 text-primary p-2">${cards[i].group}</span>
-                                            <span id="user_emergency_badge" class="badge text-bg-danger bg-opacity-25 text-danger p-2"><i class="fa-solid fa-heart-pulse"></i> emergency</span>
+                                            <span id="user_group_badge" class="badge text-bg-primary bg-opacity-25 text-primary p-2 ${
+                                              cards[i].group
+                                                ? "visible"
+                                                : "invisible"
+                                            } ">${cards[i].group}</span>
+                                            <span id="user_emergency_badge" class="badge text-bg-danger bg-opacity-25 text-danger p-2 ${
+                                              cards[i].emergency
+                                                ? "visible"
+                                                : "invisible"
+                                            } "> <i class="fa-solid fa-heart-circle-bolt"></i> emergency </span>
                                             
                                         </div>
                                     </div>
@@ -171,10 +192,10 @@ function display() {
                                             </button>
                                         </div>
                                         <div class="right d-flex gap-1 ">
-                                            <button class="icon-holder text-secondary fs-6 rounded-2">
+                                            <button class="icon-holder text-secondary fs-6 rounded-2" onclick="favToggle(${i})">
                                                 <i class="fa-regular fa-star"></i>
                                             </button>
-                                            <button class="icon-holder text-secondary fs-6 rounded-2">
+                                            <button class="icon-holder text-secondary fs-6 rounded-2" onclick="EmerToggle(${i})">
                                                 <i class="fa-regular fa-heart"></i>
                                             </button>
                                             <button class="icon-holder text-secondary fs-6 rounded-2" data-bs-toggle="modal" data-bs-target="#contact-modal" onclick=edit(${i})>
@@ -206,10 +227,13 @@ function deleteProduct(i) {
     cancelButtonText: "Cancel",
   }).then((result) => {
     if (result.isConfirmed) {
-        cards.splice(i, 1);
-        //delete from local storage
+      cards.splice(i, 1);
+      //delete from local storage
       localStorage.setItem("cards", JSON.stringify(cards));
       display();
+      updateCounters();
+      displayEmergency();
+      displayFav();
 
       Swal.fire({
         icon: "success",
@@ -230,8 +254,8 @@ function edit(i) {
   addressInput.value = cards[i].address;
   groupInput.value = cards[i].group;
   noticeInput.value = cards[i].message_text;
-  favouriteInput.value = cards[i].favourite;
-  emergencyInput.value = cards[i].emergency;
+  favouriteInput.checked = cards[i].favourite;
+  emergencyInput.checked = cards[i].emergency;
   currentIndex = i;
 }
 
@@ -243,6 +267,9 @@ function search() {
   // if search is empty display and stop function
   if (word === "") {
     display();
+    updateCounters();
+    displayEmergency();
+    displayFav();
     return;
   }
 
@@ -392,7 +419,7 @@ function showValidationAlert() {
 function validateForm() {
   var isValid = true;
 
-  // Validate Name 
+  // Validate Name
   if (!validateName()) {
     nameInput.classList.add("is-invalid");
     isValid = false;
@@ -400,7 +427,7 @@ function validateForm() {
     nameInput.classList.remove("is-invalid");
   }
 
-  // Validate Phone 
+  // Validate Phone
   if (!validatePhone()) {
     phoneInput.classList.add("is-invalid");
     isValid = false;
@@ -423,4 +450,128 @@ function validateForm() {
   }
 
   return isValid;
+}
+
+function favToggle(i) {
+  cards[i].favourite = !cards[i].favourite;
+  display();
+  updateCounters();
+  displayFav();
+  localStorage.setItem("cards", JSON.stringify(cards));
+}
+
+function EmerToggle(i) {
+  cards[i].emergency = !cards[i].emergency;
+  display();
+  displayEmergency();
+  updateCounters();
+  localStorage.setItem("cards", JSON.stringify(cards));
+}
+
+function displayFav() {
+  var counter = 0;
+  var cartona = "";
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i].favourite === true) {
+      counter++;
+      cartona += `
+                                <div class="col-12 col-md-6 col-lg-12 ${
+                                  cards[i].favourite ? "d-block" : "d-none"
+                                }">
+                                    <div class="contact px-3">
+                                        <div
+                                            class="content d-flex justify-content-between align-items-center rounded-4 p-2 ">
+                                            <div class="left d-flex align-items-center gap-2">
+                                                <div
+                                                    class="img-holder bg-success bg-gradient rounded-3 text-white d-flex justify-content-center align-items-center shadow-sm">
+                                                    <span id="first_letter" class="text-white fs-12 fw-bold">AB</span>
+                                                </div>
+                                                <div class="text">
+                                                    <h6 id="favourite_user_name" class="m-0 h6">${
+                                                      cards[i].user_name
+                                                    }</h6>
+                                                    <span id="favourite_phone" class="text-muted h6">${
+                                                      cards[i].phone
+                                                    }</span>
+                                                </div>
+                                            </div>
+                                            <div class="right rounded-3 bg-success bg-opacity-25 text-success ">
+                                                <i class="fa-solid fa-phone"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+          `;
+    }
+  }
+
+  if (counter == 0) {
+    cartona += `
+          <div id="empty-msg-favourite">
+            <p class="h6 fw-medium text-secondary p-5 text-center">No favourite yet</p>
+          </div>
+        `;
+  }
+  document.getElementById("favCard").innerHTML = cartona;
+}
+
+function displayEmergency() {
+  var cartona = "";
+  var counter = 0;
+
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i].emergency) {
+      counter++;
+      cartona += `
+          <div class="col-12 col-md-6 col-lg-12 ${
+            cards[i].emergency ? "d-block" : "d-none"
+          }">
+              <div class="contact px-3 py-2">
+                  <div
+                      class="content d-flex justify-content-between align-items-center p-2 rounded-4">
+                      <div class="left d-flex align-items-center gap-2">
+                          <div class="img-holder bg-success bg-gradient rounded-3 text-white d-flex justify-content-center align-items-center shadow-sm">
+                              <span id="first_letter" class="text-white fs-12 fw-bold">AB</span>
+                          </div>
+                          <div class="text">
+                              <h6 id="emergency_user_name" class="m-0 h6">${
+                                cards[i].user_name
+                              }</h6>
+                              <span id="emergency_phone" class="text-muted h6">${
+                                cards[i].phone
+                              }</span>
+                          </div>
+                      </div>
+                      <div class="right rounded-3 bg-success bg-opacity-25 text-success">
+                          <i class="fa-solid fa-phone"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        `;
+    }
+  }
+  if (counter == 0) {
+    cartona += `
+         <div id="empty-msg-emergency">
+           <p class="h6 fw-medium text-secondary p-5 text-center">No empty yet</p>
+         </div>
+      `;
+  }
+  document.getElementById("emergency-card").innerHTML = cartona;
+}
+
+function updateCounters() {
+  total = 0;
+  favoriteCount = 0;
+  emergencyCount = 0;
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i].favourite) favoriteCount++;
+    if (cards[i].emergency) emergencyCount++;
+  }
+  total = favoriteCount + emergencyCount;
+
+  document.getElementById("total_count").innerHTML = total;
+  document.getElementById("favourite_count").innerHTML = favoriteCount;
+  document.getElementById("emergency_count").innerHTML = emergencyCount;
 }

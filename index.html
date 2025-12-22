@@ -48,7 +48,8 @@
             </nav>
         </div>
     </header>
-    <main>
+
+    <main class="pb-5">
         <!-- start of status cards -->
         <section id="status_card" class="mt-4 mb-5">
             <div class="container px-3  mx-auto">
@@ -63,7 +64,7 @@
                             </div>
                             <div class="card-text d-flex flex-column">
                                 <span class="text-uppercase">Total</span>
-                                <span class="h4 fw-bold" id="total_count">3</span>
+                                <span class="h4 fw-bold" id="total_count"></span>
                             </div>
                         </div>
                     </div>
@@ -77,7 +78,7 @@
                             </div>
                             <div class="card-text d-flex flex-column">
                                 <span class="text-uppercase">favourite</span>
-                                <span class="h4 fw-bold" id="favourite_count">3</span>
+                                <span class="h4 fw-bold" id="favourite_count"></span>
                             </div>
                         </div>
                     </div>
@@ -91,7 +92,7 @@
                             </div>
                             <div class="card-text d-flex flex-column">
                                 <span class="text-uppercase">emergency</span>
-                                <span class="h4 fw-bold" id="emergency_count">3</span>
+                                <span class="h4 fw-bold" id="emergency_count"></span>
                             </div>
                         </div>
                     </div>
@@ -132,7 +133,6 @@
                             <div class="mb-3">
                                 <label for="group" class="col-form-label">Group</label>
                                 <select class="form-select" aria-label="Default select example" id="group">
-                                    <option hidden>selected a ground</option>
                                     <option value="friends">friends</option>
                                     <option value="family">family</option>
                                     <option value="work">work</option>
@@ -181,7 +181,7 @@
         <!-- this container for search input and empty msg for search and cards that user will add -->
         <div class="container">
             <div class="row g-4">
-                <div class="col-lg-9">
+                <div class="col-xl-9">
                     <!-- start of search input-->
                     <section id="search_section" class="mb-5">
                         <div class="heading mb-3 ">
@@ -219,11 +219,11 @@
 
 
                 <!-- Favourite card and emergency card -->
-                <aside class="col-lg-3">
+                <aside class="col-xl-3">
                     <!-- start of favourite card -->
-                    <div class="favourite rounded-4  overflow-hidden border border-1 shadow-sm mb-4 bg-white">
+                    <div class="favourite rounded-4  overflow-hidden border border-1 shadow-sm mb-4 bg-white pb-2">
                         <!-- head of favourite -->
-                        <div class="head d-flex gap-2 align-items-center py-2 px-3 bg-warning bg-opacity-25 ">
+                        <div class="head d-flex gap-2 align-items-center py-2 px-3 bg-warning bg-opacity-25 mb-2">
                             <div class="icon-holder rounded-3 bg-warning  text-white bg-gradient ">
                                 <i class="fa-solid fa-star"></i>
                             </div>
@@ -233,38 +233,19 @@
                             </div>
                         </div>
                         <!-- contact that user put in favourite -->
-                        <div class="row gy-3">
+                        <div class="row gy-3" id="favCard">
                             <div id="empty-msg-favourite">
                                 <p class="h6 fw-medium text-secondary p-5 text-center">No favourite yet</p>
                             </div>
-                            <div class="col-12 col-md-6 col-lg-12">
-                                <div class="contact px-3 py-2">
-                                    <div
-                                        class="content d-flex justify-content-between align-items-center rounded-4 p-2 ">
-                                        <div class="left d-flex align-items-center gap-2">
-                                            <div
-                                                class="img-holder bg-success bg-gradient rounded-3 text-white d-flex justify-content-center align-items-center shadow-sm">
-                                                <span id="first_letter" class="text-white fs-12 fw-bold">AB</span>
-                                            </div>
-                                            <div class="text">
-                                                <h6 id="favourite_user_name" class="m-0 h6">Engy Osman</h6>
-                                                <span id="favourite_phone" class="text-muted h6">010234556</span>
-                                            </div>
-                                        </div>
-                                        <div class="right rounded-3 bg-success bg-opacity-25 text-success ">
-                                            <i class="fa-solid fa-phone"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
 
                     <!-- =========================================================================================== -->
                     <!-- start of emergency card -->
-                    <div class="emergency rounded-4  overflow-hidden border border-1 shadow-sm bg-white">
+                    <div class="emergency rounded-4  overflow-hidden border border-1 shadow-sm bg-white pb-2">
                         <!-- head of card emergency -->
-                        <div class="head d-flex gap-2 align-items-center py-2 px-3 bg-danger bg-opacity-25 ">
+                        <div class="head d-flex gap-2 align-items-center py-2 px-3 bg-danger bg-opacity-25 mb-2">
                             <div class="icon-holder rounded-3 bg-danger  text-white bg-gradient  shadow-sm">
                                 <i class="fa-solid fa-heart-pulse"></i>
                             </div>
@@ -274,29 +255,10 @@
                             </div>
                         </div>
                         <!-- contact that user put in emergency -->
-                        <div class="row">
+                        <div class="row" id="emergency-card">
                             <div id="empty-msg-emergency">
                                 <p class="h6 fw-medium text-secondary p-5 text-center">No empty yet</p>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-12">
-                                <div class="contact px-3 py-2">
-                                    <div
-                                        class="content d-flex justify-content-between align-items-center p-2 rounded-4">
-                                        <div class="left d-flex align-items-center gap-2">
-                                            <div class="img-holder bg-success bg-gradient rounded-3 text-white d-flex justify-content-center align-items-center shadow-sm">
-                                                <span id="first_letter" class="text-white fs-12 fw-bold">AB</span>
-                                            </div>
-                                            <div class="text">
-                                                <h6 id="emergency_user_name" class="m-0 h6">Engy Osman</h6>
-                                                <span id="emergency_phone" class="text-muted h6">010234556</span>
-                                            </div>
-                                        </div>
-                                        <div class="right rounded-3 bg-success bg-opacity-25 text-success">
-                                            <i class="fa-solid fa-phone"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </div>                           
                         </div>
                     </div>
                 </aside>
@@ -305,6 +267,7 @@
 
 
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/index.js"></script>
 
