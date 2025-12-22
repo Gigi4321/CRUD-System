@@ -475,7 +475,7 @@ function displayFav() {
     if (cards[i].favourite === true) {
       counter++;
       cartona += `
-                                <div class="col-12 col-md-6 col-lg-12 ${
+                                <div class="col-12 col-md-6 col-xl-12 ${
                                   cards[i].favourite ? "d-block" : "d-none"
                                 }">
                                     <div class="contact px-3">
@@ -523,7 +523,7 @@ function displayEmergency() {
     if (cards[i].emergency) {
       counter++;
       cartona += `
-          <div class="col-12 col-md-6 col-lg-12 ${
+          <div class="col-12 col-md-6 col-xl-12 ${
             cards[i].emergency ? "d-block" : "d-none"
           }">
               <div class="contact px-3 py-2">
